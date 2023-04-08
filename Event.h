@@ -1,10 +1,3 @@
-#ifndef EVENT_H
-#define EVENT_H
-
-#include <string>
-#include <iostream>
-#include <vector>
-
 class Event {
 public:
     explicit Event(const char* date);
@@ -17,14 +10,11 @@ public:
     int month() const;
     int day() const;
     std::string toString() const;
+    bool operator==(const Event& other) const;
 private:
     int m_year;
     int m_month;
     int m_day;
 };
-
 std::ostream& operator<<(std::ostream& os, const Event& event);
-
 #endif // EVENT_H
-
-
