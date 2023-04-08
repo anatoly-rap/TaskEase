@@ -24,8 +24,6 @@ public:
 
 private:
     std::vector<Event> events_;
-
-    // private helper functions, if any
 };
 // Output operator for Schedule
 std::ostream& operator<<(std::ostream& os, const Schedule& schedule);
