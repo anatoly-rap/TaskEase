@@ -1,6 +1,7 @@
 #include <fstream>
 #include <sstream>
 #include <algorithm>
+#include <iterator>
 #include "Schedule.h"
 using namespace std;
 
@@ -25,8 +26,15 @@ Schedule::~Schedule() {}
 void Schedule::read(istream& is){
   string line;
   while (getline(is, line)) {
-    events_.emplace_back(line.c_str());
-    sort();
+    istringstream iss(line);
+    vector<string> words;
+    copy(istream_iterator<string>(iss),
+         istream_iterator<string>(),
+         back_inserter(words));
+    for (const auto& word : words) {
+      events_.emplace_back(word.c_str());
+      sort();
+    }
   }
 }
 void Schedule::clear(){
