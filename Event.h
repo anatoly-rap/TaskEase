@@ -1,3 +1,10 @@
+#ifndef EVENT_H
+#define EVENT_H
+
+#include <string>
+#include <iostream>
+#include <vector>
+
 class Event {
 public:
     explicit Event(const char* date);
@@ -12,6 +19,7 @@ public:
     std::string toString() const;
     bool operator==(const Event& other) const;
 private:
+    void parseDate(const std::string& date);
     int m_year;
     int m_month;
     int m_day;
