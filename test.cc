@@ -12,97 +12,52 @@
 using namespace std;
 
 int main() {
-    cout << boolalpha;  // need this for several things
-    Schedule s;
-    ifstream in("data");
-    try {
-        s.read(in);
-    }
-    catch (const exception &e) {
-        cout << "Caught: " << e.what() << '\n';
-    }
-    // That stream should now be failed, but not at eof:
-    cout << "fail: " << in.fail() << " eof: " << in.eof() << '\n';
 
-    stringstream iss("today");
-    s.read(iss);
-    auto e = s[0];
-    cout << "Oldest: |" << e << "|"
-         << " year=" << e.year() << " month=" << e.month()
-         << " day=" << e.day() << '\n';
-    cout << "size=" << s.size() << " empty=" << s.empty() << '\n' << s;
+    istringstream tyt("tomorrow yesterday today");
+    Schedule s(tyt);
+    istringstream more("\t\r0100-10-10\f3000.365  ");
+    s.read(more);
+    // Should now contain:
+    // 0: 0100-10-10
+    // 1: yesterday
+    // 2: today
+    // 3: tomorrow
+    // 4: 3000-12-31
+    const auto s2(s);
+    assert(s.size() == s2.size());
+    for (size_t i=0; i<s2.size(); i++)
+        assert(s[i] == s2[i]);
     s.clear();
-    cout << "size=" << s.size() << " empty=" << s.empty() << '\n' << s;
-    s.clear();
-    cout << "size=" << s.size() << " empty=" << s.empty() << '\n' << s;
+    assert(s.empty());
+    assert(s.size() == 0);
+    for (const Event &e : s2)
+        cout << e.fmt() << e.fmt(" / %04Y.%j / %A %B %e %04Y%n");
 
-    // A poor implementation might have altered cout’s fill character:
-    cout << left << setw(15) << "All done." << '\n';
+    Schedule::iterator it = s2.begin();
+    assert(*++it == s2[1]);
+    assert(*it++ == s2[1]);
+    assert(*it++ == s2[2]);
+    assert(*it++ == s2[3]);
+    assert(*it++ == s2[4]);
+    assert(it == s2.end());
+    assert(it-- == s2.end());
+    assert(*it-- == s2[4]);
+    assert(*--it == s2[2]);
 
+    auto yesterday = *--it;
+    auto today = *++it;
+    auto tomorrow = *++it;
 
-    // Event objects, independent of Scheduler. 
-    Event event1("1972.100");
-    cout << "Year-Day format event: " << event1 << '\n';
+    assert(yesterday == s2[1]);
+    assert(today == s2[2]);
+    assert(tomorrow == s2[3]);
 
-    auto day1 = event1.day();
-    cout  << "testing Event1 properties day: " <<  day1 << '\n';
-
-    auto mont1 = event1.month();
-    cout  << "testing Event1 properties month: " <<  mont1 << '\n';
-    
-    auto year1 = event1.year();
-    cout  << "testing Event1 properties year: " <<  year1 << '\n';
-
-    cout << "------------now testing Event copy: first copy via constructor, then by = method -------------" << '\n';
-
-    Event eventK(event1);
-    assert(event1 == eventK);
-    cout << "constructor copy passed " << '\n';
-
-    Event eventEQ = eventK;
-    assert(eventEQ == eventK);
-
-    cout<< " == passed" << '\n';
-
-    eventEQ.set(1956,2,5);
-
-    cout << "check new set values..." <<  '\n';
-
-    auto yearEQ = eventEQ.year();
-    auto dayEQ = eventEQ.day();
-    auto monthEQ = eventEQ.month();
-
-    cout << "new year val: " << yearEQ << '\n';
-    cout << "new day val: " << dayEQ << '\n';
-    cout << "new month val: " << monthEQ << '\n';
-
-
-    cout << "now the program should exit due to failed assertion" << '\n';
-    assert(eventEQ == eventK);
-
-
-
-    // testing ISO format
-    Event event2("1998-02-23");
-    cout << "ISO format event: " << event2 << '\n';
-
-    Event event3("1996.120");
-    cout << "YEAR.DAY format event: " << event3 << '\n';
-
-    Event event4("today");
-    cout << "relative TODAY format event: " << event4 << '\n';
-
-    Event event5("tomorrow");
-    cout << "relative TOMORROW format event: " << event5 << '\n';
-
-    Event event6("yesterday");
-    cout << "relative YESTERDAY format event: " << event6 << '\n';
-
-
-    //additional tests:
-
-
-
+    const Event &first = s2[0];
+    assert(first < today);
+    assert(first <= today);
+    assert(first != today);
+    assert(today > first);
+    assert(today >= first);
 
     return 0;
 }
