@@ -8,30 +8,28 @@
 #include <map>
 #include <functional>
 #include <iostream>
-using namespace std;
 
-bool calRange(string year);
+
+bool calRange(std::string year);
 bool tfleap(int year);
-bool isYearDayFormat(const string& input);
-void beautifyDates(vector<int> datesInfo, string format);
-bool isRelativeDate(string input);
-void getfformat(string day, string fflagFormat);
-void TodDay(string day);
-vector<int> toDayParser(string day);
-string removeZeros(string str);
-bool checkDate(string line);
-bool isValidDay(vector<int> elems);
-vector<int> getDate(int year, int days);
-map<string, bool> find_year_types(const string& input);
+bool isYearDayFormat(const std::string& input);
+void beautifyDates(std::vector<int> datesInfo, std::string format);
+bool isRelativeDate(std::string input);
+void getfformat(std::string day, std::string fflagFormat);
+void TodDay(std::string day);
+std::vector<int> toDayParser(std::string day);
+std::string removeZeros(std::string str);
+bool checkDate(std::string line);
+bool isValidDay(std::vector<int> elems);
+std::vector<int> getDate(int year, int days);
+std::map<std::string, bool> find_year_types(const std::string& input);
 int days_since_start_of_year(int year, int month, int day);
-void VecBeutifyDates(vector<int> datesar);
-void ISO8601(vector<int> daysInfo);
+void VecBeutifyDates(std::vector<int> datesar);
+void ISO8601(std::vector<int> daysInfo);
 bool isIso8601(const std::string& str);
-vector<int> parse_date(string line);
+std::vector<int> parse_date(std::string line);
 bool isLeapYear(int year);
 bool isValidDate(int year, int month, int day);
-string trim(const string& str);
-
-
+std::string trim(const std::string& str);
 
 #endif
