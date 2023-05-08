@@ -45,7 +45,6 @@ void Event::parseDate(const string& date){
 }
 
 Event::Event(const char* date){
-
 std::string str_date = std::string(date);
     str_date = trim(str_date);
     if (str_date.empty()) {
@@ -142,17 +141,22 @@ bool Event::operator>(const Event& other) const {
 }
 
 string Event::fmt(const string& format) const {
-
-    tm timeinfo{};
-    timeinfo.tm_year = year() - 1900;
-    timeinfo.tm_mon = month() - 1;
-    timeinfo.tm_mday = day();
+    int totalDays = days_since_start_of_year(year(), month(), day());
+    struct tm tm = {};
+    tm.tm_year = year() - 1900;
+    tm.tm_mon = 0;
+    tm.tm_mday = totalDays;
+    tm.tm_hour = 0;
+    tm.tm_min = 0;
+    tm.tm_sec = 0;
+    tm.tm_isdst = -1;
     const char* format_cstr = format.c_str();
+    mktime(&tm);
     const int bufsize = 64;  
     char buf[bufsize];
-    const size_t result = strftime(buf, bufsize, format_cstr, &timeinfo);
+    const size_t result = strftime(buf, bufsize, format_cstr, &tm);
     if (result == 0){
-        throw runtime_error("HW7: strftime failed");
+        throw runtime_error("./HW7: strftime invalid date format");
     }
     return string(buf);
 }
